@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |gem|
   gem.name          = "hiera-postgres-backend"
-  gem.version       = "0.0.2"
+  gem.version       = "0.0.3"
   gem.authors       = ["Adrian"]
   gem.email         = ["adrianlzt@gmail.com"]
   gem.description   = %q{Alternative PostgreSQL backend for hiera}

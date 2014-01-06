@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    hiera-postgres-backend (0.0.2)
+    hiera-postgres-backend (0.0.3)
       pg
 
 GEM
