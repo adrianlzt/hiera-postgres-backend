@@ -36,11 +36,16 @@ class Hiera
 
           Hiera.debug("data #{data.inspect}")
           next if data.empty?
-          next unless data.include?(key)
+          if data.include?(key)
+              Hiera.debug("Found #{key} in #{source}")
+              new_answer = Backend.parse_answer(data[key], scope)
+          elsif data.include?('default_query')
+              Hiera.debug("Found default_query in #{source}")
+              new_answer = Backend.parse_answer(data['default_query'], scope)
+          else
+              next
+          end
 
-          Hiera.debug("Found #{key} in #{source}")
-
-          new_answer = Backend.parse_answer(data[key], scope)
           case resolution_type
           when :array
             raise Exception, "Hiera type mismatch: expected Array and got #{new_answer.class}" unless new_answer.kind_of? Array or new_answer.kind_of? String
@@ -68,10 +73,10 @@ class Hiera
         pg_user = Config[:postgres][:user]
         pg_pass = Config[:postgres][:pass]
         pg_database = Config[:postgres][:database]
-        client = PG::Connection.new(:host     => pg_host, 
-                                    :user     => pg_user, 
-                                    :password => pg_pass, 
-                                    :dbname   => pg_database)
+        client = PGconn.open(:host     => pg_host, 
+                             :user     => pg_user, 
+                             :password => pg_pass, 
+                             :dbname   => pg_database)
         begin
           data = client.exec(query).to_a
           Hiera.debug("PostgreSQL Query returned #{data.size} rows")
