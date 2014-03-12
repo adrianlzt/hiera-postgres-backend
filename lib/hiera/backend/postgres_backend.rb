@@ -38,10 +38,10 @@ class Hiera
           next if data.empty?
           if data.include?(key)
               Hiera.debug("Found #{key} in #{source}")
-              new_answer = Backend.parse_answer(data[key], scope)
+              new_answer = Backend.parse_answer(data[key], scope, { 'key' => key } )
           elsif data.include?('default_query')
               Hiera.debug("Found default_query in #{source}")
-              new_answer = Backend.parse_answer(data['default_query'], scope)
+              new_answer = Backend.parse_answer(data['default_query'], scope, { 'key' => key } )
           else
               next
           end
