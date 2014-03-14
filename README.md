@@ -7,7 +7,7 @@ This is a PostgreSQL backend for Hiera inspired by [hiera-mysql-backend](https:/
 
 ### What goes into the sql files.
 
-The poorly named sql files are really yaml files where the key is the lookup key and the value is the SQL statement (it accepts interpolation)
+The poorly named sql files are really yaml files where the key is the lookup key and the value is the SQL statement (it accepts interpolation).
 
 Lets assume your _datadir_ is `/etc/puppet/hieradata/` and your hierarchy for hiera just have a common. hiera-postgresql-backend would look for /etc/puppet/hieradata/common.sql the common.sql would look like:
 
@@ -15,9 +15,12 @@ Lets assume your _datadir_ is `/etc/puppet/hieradata/` and your hierarchy for hi
 ---
 applications: SELECT * FROM applications WHERE host='%{fqdn}';
 coats: SELECT cut,name,type FROM coats WHERE color='brown';
+default_query: SELECT dbhost, dbuser, dbpass FROM db_servers WHERE dbclient='%{fqdn}' and dbname='%{key}';
 ```
 
 running `hiera applications` would run the query against the configured database.
+
+The default_query key is special: it is in fact a default for anything in this hierarchy that is not specified with its own key. For example, running `hiera booksdb` would run default_query with the key variable in the query being interpolated as "booksdb".
 
 
 ### Using
