@@ -61,7 +61,12 @@ class Hiera
           end
 
         end
-          return answer
+        unless answer.kind_of? String
+            if answer.empty?
+                answer = nil
+            end
+        end
+        return answer
       end
 
 

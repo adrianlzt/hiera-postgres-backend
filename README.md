@@ -22,6 +22,7 @@ running `hiera applications` would run the query against the configured database
 
 The default_query key is special: it is in fact a default for anything in this hierarchy that is not specified with its own key. For example, running `hiera booksdb` would run default_query with the key variable in the query being interpolated as "booksdb".
 
+Empty arrays and empty hashes returned from the database will be collapsed to nil as Puppet modules expect. Empty (zero-length) non-nil string values returned by the query suggest an actual empty column in the database and are returned as empty strings.
 
 ### Using
 
@@ -58,8 +59,7 @@ Hiera configuration is pretty simple
 
 ## Known issues
 
-1. It always return an Array of hashes regardless of the number of items returned. (I did this on purpose because it is what I needed but I may be persuaded to do otherwise)
-2. This README is poorly written.
+1. This README is poorly written.
 
 
 ## Contributing
