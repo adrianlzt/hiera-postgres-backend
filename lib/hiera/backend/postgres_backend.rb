@@ -61,8 +61,8 @@ class Hiera
           end
 
         end
-        unless answer.kind_of? String
-            if answer.empty?
+	unless answer.kind_of? String 
+	    if answer==nil or answer.empty?
                 answer = nil
             end
         end
@@ -82,9 +82,18 @@ class Hiera
                              :user     => pg_user, 
                              :password => pg_pass, 
                              :dbname   => pg_database)
-        begin
-          data = client.exec(query).to_a
-          Hiera.debug("PostgreSQL Query returned #{data.size} rows")
+	begin
+	   rows=client.exec(query)
+	   if rows.fields().count==1 and rows.count()==1
+             	data=rows[0][rows.fields()[0]]
+	   elsif rows.fields().count==1 and rows.count()>1
+             	ary=Array.new
+             	rows.each { |row| ary.push(row[rows.fields()[0]]) }
+             	data=ary
+	   else
+            	data = rows.to_a
+	   end
+	   Hiera.debug("returned rows " + rows.count().to_s + " columns " + rows.fields.count().to_s)
         rescue => e
           Hiera.debug e.message
           data = nil
