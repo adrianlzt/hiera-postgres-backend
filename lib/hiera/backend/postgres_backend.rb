@@ -57,6 +57,10 @@ class Hiera
             answer = Backend.merge_answer(query(new_answer),answer)
           else
             answer = query(new_answer)
+            if answer.length == 0
+              answer = nil
+              next
+            end
             break
           end
 
